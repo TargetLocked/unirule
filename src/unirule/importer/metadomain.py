@@ -21,6 +21,7 @@ import yaml
 
 from unirule.exception import InvalidInputError
 from unirule.importer import BaseImporter
+from unirule.util import minify_rule
 
 # https://wiki.metacubex.one/handbook/syntax/#_8
 
@@ -89,7 +90,7 @@ def _import_metadomain(items: list[str]) -> dict:
             else:
                 # no wildcard (hopefully)
                 _trans_domain(item, result)
-    return result
+    return minify_rule(result)
 
 
 @final

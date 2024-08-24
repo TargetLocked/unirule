@@ -20,7 +20,7 @@ from typing import Any, TextIO, final, override
 
 from unirule.exception import InvalidInputError
 from unirule.importer import BaseImporter
-from unirule.util import Registry
+from unirule.util import Registry, minify_rule
 
 # The format is almost identical to the IR, except for Listable items
 # where using a list is mandatory even if there is only one item.
@@ -107,7 +107,6 @@ def _import_singbox(rule: dict) -> dict:
                 # format all fields
                 fmt = _reg.get(key)
                 rule[key] = fmt(value)
-            return rule
         case "logical":
             for key, value in rule.items():
                 match key:
@@ -124,9 +123,9 @@ def _import_singbox(rule: dict) -> dict:
                         raise InvalidInputError(f"unsupported logical field: {key}")
             # parse all sub-rules
             rule["rules"] = [_import_singbox(subrule) for subrule in rule["rules"]]
-            return rule
         case _:
             raise InvalidInputError(f"unsupported rule type: {tp}")
+    return minify_rule(rule)
 
 
 @final

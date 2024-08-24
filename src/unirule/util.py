@@ -60,3 +60,11 @@ class Registry:
             return func
 
         return _decorator
+
+
+def minify_rule(rule: dict) -> dict:
+    new_rule = rule.copy()
+    for key, value in rule.items():
+        if len(value) == 0:
+            del new_rule[key]
+    return new_rule

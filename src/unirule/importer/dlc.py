@@ -18,7 +18,7 @@
 from typing import TextIO, final, override
 
 from unirule.importer import BaseImporter
-from unirule.util import Registry
+from unirule.util import Registry, minify_rule
 
 # for line prefix
 _reg = Registry()
@@ -67,7 +67,7 @@ def _import_dlc(lines: list[str]) -> dict:
         # translate
         trans_func = _reg.get(prefix)
         trans_func(content, result)
-    return result
+    return minify_rule(result)
 
 
 @final
