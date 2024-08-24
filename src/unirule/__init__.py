@@ -25,6 +25,7 @@ from unirule.exporter.singbox import SingboxExporter
 from unirule.importer.dlc import DlcImporter
 from unirule.importer.metadomain import MetaDomainTextImporter, MetaDomainYamlImporter
 from unirule.importer.singbox import SingboxImporter
+from unirule.util import uglobal
 
 INPUT_TYPES = {
     "singbox": SingboxImporter,
@@ -59,10 +60,13 @@ def main() -> int:
         required=True,
         choices=OUTPUT_TYPES.keys(),
     )
-
-    # TODO: add option to silently ignore output errors
+    parser.add_argument(
+        "-p", "--pedantic", help="mark all warnings as errors", action="store_true"
+    )
 
     args = parser.parse_args()
+
+    uglobal.pedantic = args.pedantic
 
     # create stream object
     istream = sys.stdin

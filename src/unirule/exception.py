@@ -20,7 +20,15 @@ class InvalidInputError(Exception):
     pass
 
 
+class IncapableInputError(Exception):
+    """It is recommended to use util.incapable_input instead."""
+
+    pass
+
+
 class IncapableOutputError(Exception):
+    """It is recommended to use util.incapable_output instead."""
+
     pass
 
 

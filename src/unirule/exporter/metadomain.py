@@ -15,13 +15,13 @@
 # You should have received a copy of the GNU General Public License
 # along with unirule.  If not, see <https://www.gnu.org/licenses/>.
 
-from typing import TextIO, final, override
+from typing import Callable, TextIO, final, override
 
 import yaml
 
-from unirule.exception import BadIrError, IncapableOutputError
+from unirule.exception import BadIrError
 from unirule.exporter import BaseExporter
-from unirule.util import Registry
+from unirule.util import Registry, incapable_output
 
 # for key
 _reg = Registry()
@@ -48,22 +48,31 @@ def _trans_domain_suffix(value: list[str]) -> list[str]:
 # TODO: add support for "domain_regex" produced by MetaDomain*Importer
 
 
+@_reg.key_handler(Registry.NOMATCH_CURRIED)
+def _unknown_field(key: str) -> Callable:
+    def _trans_unknown(_) -> list[str]:
+        return []
+
+    incapable_output(f"unsupported IR field: {key}")
+    return _trans_unknown
+
+
 # 1 rule item -> N rule lines
 def _export_metadomain(rule: dict) -> list[str]:
+    results = []
     match tp := rule.get("type"):
         case None:
-            results = []
             for key, value in rule.items():
                 if len(value) == 0:
                     continue
                 # translate all fields
                 trans_func = _reg.get(key)
                 results.extend(trans_func(value))
-            return results
         case "logical":
-            raise IncapableOutputError("logical rule is not supported")
+            incapable_output("logical rule is not supported")
         case _:
             raise BadIrError(f"unexpected rule type: {tp}")
+    return results
 
 
 @final
