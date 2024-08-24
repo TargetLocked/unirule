@@ -16,19 +16,24 @@
 # along with unirule.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from typing import Callable
+from typing import Callable, Optional
 
 
 class Registry:
     """Registry for dispatching key to the corresponding hook function."""
 
+    NOMATCH = "__nomatch__"
+
     # TODO: custom error handler for more friendly error msgs
 
     def __init__(self) -> None:
         self._data = {}
+        self._nomatch_value: Optional[Callable] = None
 
     def set(self, key: str, value: Callable) -> None:
-        if key in self._data:
+        if key is self.NOMATCH:
+            self._nomatch_value = value
+        elif key in self._data:
             raise ValueError(f"duplicate key in Registry: {key}")
         self._data[key] = value
 
@@ -36,6 +41,8 @@ class Registry:
         try:
             return self._data[key]
         except KeyError:
+            if self._nomatch_value is not None:
+                return self._nomatch_value
             raise ValueError(f"unsupported key: {key}") from None
 
     def key_handler(self, key: str) -> Callable:
