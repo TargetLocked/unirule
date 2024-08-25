@@ -11,3 +11,6 @@ wheels/
 
 # local test
 test.*
+
+# uv config
+uv.toml
