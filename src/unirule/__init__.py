@@ -19,10 +19,12 @@ import argparse
 
 from unirule.exporter.dlc import DlcExporter
 from unirule.exporter.metadomain import MetaDomainTextExporter, MetaDomainYamlExporter
+from unirule.exporter.metaipcidr import MetaIpcidrTextExporter, MetaIpcidrYamlExporter
 from unirule.exporter.singbox import SingboxExporter
 from unirule.importer.adguarddns import AdguardDnsImporter
 from unirule.importer.dlc import DlcImporter
 from unirule.importer.metadomain import MetaDomainTextImporter, MetaDomainYamlImporter
+from unirule.importer.metaipcidr import MetaIpcidrTextImporter, MetaIpcidrYamlImporter
 from unirule.importer.singbox import SingboxImporter
 from unirule.util import (
     create_istream,
@@ -36,6 +38,8 @@ INPUT_TYPES = {
     "dlc": DlcImporter,
     "meta-domain-yaml": MetaDomainYamlImporter,
     "meta-domain-text": MetaDomainTextImporter,
+    "meta-ipcidr-yaml": MetaIpcidrYamlImporter,
+    "meta-ipcidr-text": MetaIpcidrTextImporter,
     "adguard-dns": AdguardDnsImporter,
     "adguard-dns-multiout": AdguardDnsImporter,
 }
@@ -45,6 +49,8 @@ OUTPUT_TYPES = {
     "dlc": DlcExporter,
     "meta-domain-yaml": MetaDomainYamlExporter,
     "meta-domain-text": MetaDomainTextExporter,
+    "meta-ipcidr-yaml": MetaIpcidrYamlExporter,
+    "meta-ipcidr-text": MetaIpcidrTextExporter,
 }
 
 
