@@ -20,7 +20,7 @@ import argparse
 from unirule.exporter.dlc import DlcExporter
 from unirule.exporter.metadomain import MetaDomainTextExporter, MetaDomainYamlExporter
 from unirule.exporter.singbox import SingboxExporter
-from unirule.importer.adguarddns import AdguardDNSImporter
+from unirule.importer.adguarddns import AdguardDnsImporter
 from unirule.importer.dlc import DlcImporter
 from unirule.importer.metadomain import MetaDomainTextImporter, MetaDomainYamlImporter
 from unirule.importer.singbox import SingboxImporter
@@ -36,8 +36,8 @@ INPUT_TYPES = {
     "dlc": DlcImporter,
     "meta-domain-yaml": MetaDomainYamlImporter,
     "meta-domain-text": MetaDomainTextImporter,
-    "adguard-dns": AdguardDNSImporter,
-    "adguard-dns-multiout": AdguardDNSImporter,
+    "adguard-dns": AdguardDnsImporter,
+    "adguard-dns-multiout": AdguardDnsImporter,
 }
 
 OUTPUT_TYPES = {

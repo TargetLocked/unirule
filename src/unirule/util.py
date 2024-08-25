@@ -25,7 +25,7 @@ from unirule.exception import IncapableInputError, IncapableOutputError
 
 if TYPE_CHECKING:
     from unirule.exporter import BaseExporter
-    from unirule.importer.adguarddns import AdguardDNSImporter
+    from unirule.importer.adguarddns import AdguardDnsImporter
 
 
 class Registry:
@@ -140,7 +140,7 @@ def _minify_expr(lhs: str, op: str, rhs: str) -> str:
 
 
 def multiple_output_from_adg(
-    importer: "AdguardDNSImporter", exporter: "BaseExporter", output_tmpl: str
+    importer: "AdguardDnsImporter", exporter: "BaseExporter", output_tmpl: str
 ) -> None:
     if output_tmpl.count("{}") != 1:
         raise ValueError('output-path must contain one "{}" as placeholder')

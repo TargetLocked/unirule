@@ -199,7 +199,7 @@ def _minify_logicial(rule: dict) -> dict:
 
 
 @final
-class AdguardDNSImporter(BaseImporter):
+class AdguardDnsImporter(BaseImporter):
     @override
     def import_(self, stream: TextIO) -> None:
         adgresult = _import_adg(stream.readlines())
