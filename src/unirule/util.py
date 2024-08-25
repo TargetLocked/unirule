@@ -16,11 +16,16 @@
 # along with unirule.  If not, see <https://www.gnu.org/licenses/>.
 
 
+import io
 import sys
 from dataclasses import dataclass
-from typing import Callable, Optional
+from typing import TYPE_CHECKING, Callable, Optional, TextIO
 
 from unirule.exception import IncapableInputError, IncapableOutputError
+
+if TYPE_CHECKING:
+    from unirule.exporter import BaseExporter
+    from unirule.importer.adguarddns import AdguardDNSImporter
 
 
 class Registry:
@@ -80,8 +85,16 @@ def minify_rule(rule: dict) -> dict:
     return new_rule
 
 
+def info(info: str) -> None:
+    print(f"[INFO] {info}", file=sys.stderr)
+
+
 def warn(info: str) -> None:
     print(f"[WARN] {info}", file=sys.stderr)
+
+
+def error(info: str) -> None:
+    print(f"[ERROR] {info}", file=sys.stderr)
 
 
 def incapable_input(reason: str) -> None:
@@ -100,3 +113,53 @@ def incapable_output(reason: str) -> None:
 
 def unreachable() -> None:
     raise RuntimeError("internal error")
+
+
+def create_istream(path: str) -> TextIO:
+    if path == "stdin":
+        return sys.stdin
+    return io.TextIOWrapper(
+        io.BufferedReader(io.FileIO(path, mode="r")), encoding="utf-8"
+    )
+
+
+def create_ostream(path: str) -> TextIO:
+    if path == "stdout":
+        return sys.stdout
+    return io.TextIOWrapper(
+        io.BufferedWriter(io.FileIO(path, mode="w")), encoding="utf-8", newline="\n"
+    )
+
+
+def _minify_expr(lhs: str, op: str, rhs: str) -> str:
+    if len(lhs) == 0:
+        return rhs
+    if len(rhs) == 0:
+        return lhs
+    return f"({lhs} {op} {rhs})"
+
+
+def multiple_output_from_adg(
+    importer: "AdguardDNSImporter", exporter: "BaseExporter", output_tmpl: str
+) -> None:
+    if output_tmpl.count("{}") != 1:
+        raise ValueError('output-path must contain one "{}" as placeholder')
+    # ((normal_rule && !normal_exception) || important_rule) && !important_exception
+    adgresult = importer.adg_result
+    i = 0
+    expr = ""
+    for name_tmpl, rule, op in [
+        ("item_{}", adgresult.normal_rule, ""),
+        ("!item_{}", adgresult.normal_exception, "&&"),
+        ("item_{}", adgresult.important_rule, "||"),
+        ("!item_{}", adgresult.important_exception, "&&"),
+    ]:
+        if len(rule) == 0:
+            continue
+        expr = _minify_expr(expr, op, name_tmpl.format(i))
+        output_path = output_tmpl.format(i)
+        i += 1
+        exporter.set_ir([rule])
+        exporter.export(create_ostream(output_path))
+    info(f"multiple output: total items: {i}")
+    info(f"multiple output: equivalent expression: {expr}")

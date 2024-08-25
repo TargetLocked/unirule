@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with unirule.  If not, see <https://www.gnu.org/licenses/>.
 
+import copy
 import re
 from dataclasses import dataclass
 from typing import Optional, TextIO, final, override
@@ -202,12 +203,14 @@ class AdguardDNSImporter(BaseImporter):
     @override
     def import_(self, stream: TextIO) -> None:
         adgresult = _import_adg(stream.readlines())
+        # for multiple output
+        self.adg_result = copy.deepcopy(adgresult)
         # add invert
         if len(adgresult.important_exception) > 0:
             adgresult.important_exception["invert"] = True
         if len(adgresult.normal_exception) > 0:
             adgresult.normal_exception["invert"] = True
-        # !important_exception && (important_rule || (!normal_exception && normal_rule))
+        # ((normal_rule && !normal_exception) || important_rule) && !important_exception
         merged = _minify_logicial(
             {
                 "type": "logical",

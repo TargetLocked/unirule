@@ -16,8 +16,6 @@
 # along with unirule.  If not, see <https://www.gnu.org/licenses/>.
 
 import argparse
-import io
-import sys
 
 from unirule.exporter.dlc import DlcExporter
 from unirule.exporter.metadomain import MetaDomainTextExporter, MetaDomainYamlExporter
@@ -26,7 +24,12 @@ from unirule.importer.adguarddns import AdguardDNSImporter
 from unirule.importer.dlc import DlcImporter
 from unirule.importer.metadomain import MetaDomainTextImporter, MetaDomainYamlImporter
 from unirule.importer.singbox import SingboxImporter
-from unirule.util import uglobal
+from unirule.util import (
+    create_istream,
+    create_ostream,
+    multiple_output_from_adg,
+    uglobal,
+)
 
 INPUT_TYPES = {
     "singbox": SingboxImporter,
@@ -34,6 +37,7 @@ INPUT_TYPES = {
     "meta-domain-yaml": MetaDomainYamlImporter,
     "meta-domain-text": MetaDomainTextImporter,
     "adguard-dns": AdguardDNSImporter,
+    "adguard-dns-multiout": AdguardDNSImporter,
 }
 
 OUTPUT_TYPES = {
@@ -70,22 +74,15 @@ def main() -> int:
 
     uglobal.pedantic = args.pedantic
 
-    # create stream object
-    istream = sys.stdin
-    if args.input_path != "stdin":
-        buffered_file = io.BufferedReader(io.FileIO(args.input_path, mode="r"))
-        istream = io.TextIOWrapper(buffered_file, encoding="utf-8")
-    ostream = sys.stdout
-    if args.output_path != "stdout":
-        buffered_file = io.BufferedWriter(io.FileIO(args.output_path, mode="w"))
-        ostream = io.TextIOWrapper(buffered_file, encoding="utf-8", newline="\n")
-
     # find importer and exporter
     importer = INPUT_TYPES[args.input_type]()
     exporter = OUTPUT_TYPES[args.output_type]()
 
-    importer.import_(istream)
-    exporter.set_ir(importer.get_ir())
-    exporter.export(ostream)
+    importer.import_(create_istream(args.input_path))
+    if args.input_type == "adguard-dns-multiout":
+        multiple_output_from_adg(importer, exporter, args.output_path)
+    else:
+        exporter.set_ir(importer.get_ir())
+        exporter.export(create_ostream(args.output_path))
 
     return 0
