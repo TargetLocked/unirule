@@ -19,7 +19,9 @@ unirule -h
 ```
 
 ```plain
-usage: unirule [-h] -i {singbox,dlc,meta-domain-yaml,meta-domain-text} -o {singbox,dlc,meta-domain-yaml,meta-domain-text} input_path output_path
+usage: unirule [-h] -i {singbox,dlc,meta-domain-yaml,meta-domain-text,meta-ipcidr-yaml,meta-ipcidr-text,adguard-dns,adguard-dns-multiout} -o
+               {singbox,dlc,meta-domain-yaml,meta-domain-text,meta-ipcidr-yaml,meta-ipcidr-text} [-p]
+               input_path output_path
 
 positional arguments:
   input_path            "stdin" or path to the input file
@@ -27,10 +29,11 @@ positional arguments:
 
 options:
   -h, --help            show this help message and exit
-  -i {singbox,dlc,meta-domain-yaml,meta-domain-text}, --input-type {singbox,dlc,meta-domain-yaml,meta-domain-text}
+  -i {singbox,dlc,meta-domain-yaml,meta-domain-text,meta-ipcidr-yaml,meta-ipcidr-text,adguard-dns,adguard-dns-multiout}, --input-type {singbox,dlc,meta-domain-yaml,meta-domain-text,meta-ipcidr-yaml,meta-ipcidr-text,adguard-dns,adguard-dns-multiout}
                         type of the input file
-  -o {singbox,dlc,meta-domain-yaml,meta-domain-text}, --output-type {singbox,dlc,meta-domain-yaml,meta-domain-text}
+  -o {singbox,dlc,meta-domain-yaml,meta-domain-text,meta-ipcidr-yaml,meta-ipcidr-text}, --output-type {singbox,dlc,meta-domain-yaml,meta-domain-text,meta-ipcidr-yaml,meta-ipcidr-text}
                         type of the output file
+  -p, --pedantic        mark all warnings as errors
 ```
 
 ## Develop
