@@ -21,7 +21,7 @@ from typing import Optional, TextIO, final, override
 
 from unirule.exception import InvalidInputError
 from unirule.importer import BaseImporter
-from unirule.util import incapable_input, minify_rule
+from unirule.util import incapable_input, minify_rule, unreachable
 
 
 @dataclass
@@ -142,7 +142,7 @@ def _parse_pattern(pattern: str, result: dict) -> None:
                     # prefix but not suffix -> regex
                     result["domain_regex"].append(r"^" + re.escape(pattern) + r".*$")
                 case _:
-                    raise RuntimeError("internal error")
+                    unreachable()
 
 
 # N rule lines -> 4 components
@@ -176,7 +176,7 @@ def _import_adg(lines: list[str]) -> _AdgResult:
             case False, False:
                 _parse_pattern(pattern, result.normal_rule)
             case _:
-                raise RuntimeError("internal error")
+                unreachable()
     return _AdgResult(
         normal_rule=minify_rule(result.normal_rule),
         important_rule=minify_rule(result.important_rule),

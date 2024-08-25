@@ -96,3 +96,7 @@ def incapable_output(reason: str) -> None:
         raise IncapableOutputError(reason)
     else:
         warn(reason)
+
+
+def unreachable() -> None:
+    raise RuntimeError("internal error")
