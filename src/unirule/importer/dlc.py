@@ -56,8 +56,9 @@ def _import_dlc(lines: list[str]) -> dict:
         # remove EOLs
         line = line.strip()
         # remove attributes
-        if (idx := line.find(" @")) != -1:
-            line = line[:idx].strip()
+        for idx in [line.find(sep) for sep in (" @", ":@")]:
+            if idx != -1:
+                line = line[:idx].strip()
         if ":" not in line:
             # default
             prefix = "domain"
