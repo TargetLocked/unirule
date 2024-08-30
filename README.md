@@ -45,5 +45,3 @@ git clone https://github.com/TargetLocked/unirule.git
 cd unirule
 rye sync
 ```
-
-For more information, please refer to the manual of Rye.

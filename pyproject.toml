@@ -1,6 +1,6 @@
 [project]
 name = "unirule"
-version = "0.2.1"
+version = "0.2.2"
 description = "Rule converter for proxy platforms."
 authors = [
     { name = "TargetLocked", email = "32962687+TargetLocked@users.noreply.github.com" },
