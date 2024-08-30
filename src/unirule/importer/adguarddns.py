@@ -36,8 +36,8 @@ class _AdgResult:
 # (is_exception, is_important, pattern)
 def _parse_line(line: str) -> Optional[tuple[bool, bool, str]]:
     line = line.strip()
-    # comments
-    if line.startswith("!") or line.startswith("#"):
+    # comments or blank lines
+    if line.startswith("!") or line.startswith("#") or len(line) == 0:
         return None
     # exception marker
     is_exception = line.startswith("@@")
