@@ -27,5 +27,5 @@ from unirule.exporter import BaseExporter
 class SingboxExporter(BaseExporter):
     @override
     def export(self, stream: TextIO) -> None:
-        srs = {"version": 1, "rules": self.ir}
+        srs = {"version": 3, "rules": self.ir}
         json.dump(srs, stream)
