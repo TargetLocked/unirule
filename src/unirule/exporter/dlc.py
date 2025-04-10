@@ -34,6 +34,7 @@ def _trans_domain(value: list[str]) -> list[str]:
 @_reg.key_handler("domain_suffix")
 def _trans_domain_suffix(value: list[str]) -> list[str]:
     # Match domain suffix.
+    # FIXME: items prefixed with '.' should be literal suffix
     return [f"{item.removeprefix('.')}" for item in value]
 
 
