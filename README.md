@@ -6,7 +6,7 @@ unirule supports rules in text formats only. For binary formats, we recommend [M
 
 ## Install
 
-unirule requires Python >= 3.10 .
+unirule requires Python >= 3.12.10 .
 
 ```bash
 pip install unirule
@@ -38,10 +38,10 @@ options:
 
 ## Develop
 
-This project uses [Rye](https://rye.astral.sh/).
+This project uses [uv](https://docs.astral.sh/uv).
 
 ```bash
 git clone https://github.com/TargetLocked/unirule.git
 cd unirule
-rye sync
+uv sync
 ```
